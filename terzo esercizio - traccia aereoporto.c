@@ -1,19 +1,12 @@
-
 /*
  ============================================================================
  Name        : terzo.c
  Author      : piersilvio
  Version     :
- Copyright   :
- Description : prova dell'aereoporto
+ Copyright   : 
+ Description : prova aereoporto
  ============================================================================
  */
-
- /*
- ho un errore logico quando inserisco
- durante l'input
- */
-
 
 #include <stdio.h>
 #include <string.h>
@@ -40,27 +33,39 @@ volo vol[max_fly];
 //inputs
 int scelta;
 int num_posti;
-char cod_volo;
 
 //working variables
 int i = 0;
-bool flag = false; //flag = false;
+
+void prenotazione();
+void inserimento();
 
 int main(){
 
 
 	do{
 		printf(":: Insert the number of flys: \n");
+		fflush(stdout);
 		scanf("%d", &n_voli);
 
 	}while(n_voli == 0);
 
     inserimento();
 
+    for(i = 0; i < n_voli; i++){
+    	printf(":: code of vole: %s\n", vol[i].cod_volo);
+    	printf(":: city of the departure: %s\n", vol[i].citta_partenza);
+    	printf(":: city of the arrival: %s\n", vol[i].citta_arrivo);
+    	printf(":: total of seats: %d\n", vol[i].tot_posti);
+    	printf(":: the number of occuped seats: %d\n", vol[i].posti_occup);
+    	printf("\n");
+    }
+
     do{
 
         prenotazione();
-        printf(":: do you want to perform another operation? (1.yes) (2.no)");
+        printf(":: do you want to perform another operation? (1.yes) (2.no) \n");
+        fflush(stdout);
         scanf("%d", &scelta);
 
     }while(scelta == 1);
@@ -70,38 +75,59 @@ int main(){
 
 void prenotazione(){
 
+    int position = 0;
+	char cod_volo = ' ';
+	int tmp = 0;
+
+	i = 0;
+
     printf(":: insert the code of fly: \n");
+    fflush(stdout);
     scanf("%s", &cod_volo);
 
-    i = 0;
-
     do{
-            int parse;
-            parse = strcmp(cod_volo, vol[i].cod_volo);
+    	_Bool flag = 0;
 
-        if(parse == 0){
+        if(strcmp(&cod_volo, vol[i].cod_volo) == 0){
 
             printf(":: insert the number of seat to prenotate: \n");
+            fflush(stdout);
             scanf("%d", &num_posti);
 
-            if(vol[i].tot_posti >= num_posti){
-                flag = true;
-                vol[i].posti_occup = vol[i].posti_occup + num_posti;
+            position = i;
+
+            tmp = num_posti + vol[position].posti_occup; //tiene conto del contatore all'interno del ciclo
+
+            if(tmp <= vol[position].tot_posti){
+                flag = 1;
+                vol[position].posti_occup = vol[position].posti_occup + num_posti;
             }
 
-        }else{ printf(":: the inserted code is not valid! \n"); }
+
+
+            if(flag == 1){
+            	//printf("%d", flag); debug
+            	printf(":: fly rented with succesfuly! \n");
+            }else{
+                printf(":: Could not rent the fly! \n");
+            }
+
+            printf("\n");
+
+            printf(":: code of vole: %s\n", vol[i].cod_volo);
+            printf(":: city of the departure: %s\n", vol[i].citta_partenza);
+            printf(":: city of the arrival: %s\n", vol[i].citta_arrivo);
+            printf(":: total of seats: %d\n", vol[i].tot_posti);
+            printf(":: the number of occuped seats: %d\n", vol[i].posti_occup);
+
+        }
+
 
         i = i + 1;
 
     }while(i <= n_voli);
 
 
-    if(flag == false){
-
-        printf(":: Could not rent the fly!");
-    }else{
-        printf(":: fly rented with succesfuly!");
-    }
 }
 
 void inserimento(){
@@ -109,15 +135,21 @@ void inserimento(){
     for(i = 0; i < n_voli; i++){ //utilizzo il for per dbugguare
 
         printf(":: Insert code of vole: \n");
+        fflush(stdout);
 		scanf("%s", vol[i].cod_volo);
-		printf(":: insert city of the departure \n:");
+		printf(":: insert city of the departure: \n");
+		fflush(stdout);
 		scanf("%s", vol[i].citta_partenza);
-		printf(":: insert city of the arrival \n:");
+		printf(":: insert city of the arrival: \n");
+		fflush(stdout);
 		scanf("%s", vol[i].citta_arrivo);
-		printf(":: insert total of seats \n:");
+		printf(":: insert total of seats: \n");
+		fflush(stdout);
 		scanf("%d", &vol[i].tot_posti);
-		printf(":: insert the number of occuped seats \n:");
-		scanf("%d", &vol[i].posti_occup);
+		printf("\n");
+
+		vol[i].posti_occup = 0; //inizializza
+
     }
 }
 
